@@ -32,11 +32,13 @@ import { MailboxView } from './components/MailboxView';
 import { GuidelinesView } from './components/GuidelinesView';
 
 export default function App() {
-  // Persistence state
+  // Persistence state with robust fallback against corrupted cache
   const [inmates, setInmates] = useState<InmateProfile[]>(() => {
     try {
       const saved = localStorage.getItem('gtaw_writean_inmates');
-      return saved ? JSON.parse(saved) : INITIAL_INMATES;
+      if (!saved) return INITIAL_INMATES;
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : INITIAL_INMATES;
     } catch {
       return INITIAL_INMATES;
     }
@@ -45,7 +47,9 @@ export default function App() {
   const [messages, setMessages] = useState<PrivateMessage[]>(() => {
     try {
       const saved = localStorage.getItem('gtaw_writean_messages');
-      return saved ? JSON.parse(saved) : INITIAL_MESSAGES;
+      if (!saved) return INITIAL_MESSAGES;
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed : INITIAL_MESSAGES;
     } catch {
       return INITIAL_MESSAGES;
     }
@@ -54,7 +58,9 @@ export default function App() {
   const [moderationLogs, setModerationLogs] = useState<ModerationLog[]>(() => {
     try {
       const saved = localStorage.getItem('gtaw_writean_modlogs');
-      return saved ? JSON.parse(saved) : INITIAL_MODERATION_LOGS;
+      if (!saved) return INITIAL_MODERATION_LOGS;
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed : INITIAL_MODERATION_LOGS;
     } catch {
       return INITIAL_MODERATION_LOGS;
     }
@@ -63,7 +69,9 @@ export default function App() {
   const [bookmarks, setBookmarks] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem('gtaw_writean_bookmarks');
-      return saved ? JSON.parse(saved) : ['inmate-101', 'inmate-102'];
+      if (!saved) return ['inmate-101', 'inmate-102'];
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed : ['inmate-101', 'inmate-102'];
     } catch {
       return ['inmate-101', 'inmate-102'];
     }
@@ -344,25 +352,27 @@ export default function App() {
 
     // Seeking intent
     if (filters.seeking) {
-      result = result.filter(i => i.seeking.includes(filters.seeking as any));
+      result = result.filter(i => Array.isArray(i.seeking) && i.seeking.includes(filters.seeking as any));
     }
 
     // Sort
     result = [...result].sort((a, b) => {
       if (filters.sortBy === 'newest') {
-        return new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime();
+        const timeB = b.submittedAt ? new Date(b.submittedAt).getTime() : 0;
+        const timeA = a.submittedAt ? new Date(a.submittedAt).getTime() : 0;
+        return timeB - timeA;
       }
       if (filters.sortBy === 'ageAsc') {
-        return a.age - b.age;
+        return (a.age || 0) - (b.age || 0);
       }
       if (filters.sortBy === 'ageDesc') {
-        return b.age - a.age;
+        return (b.age || 0) - (a.age || 0);
       }
       if (filters.sortBy === 'name') {
-        return a.name.localeCompare(b.name);
+        return (a.name || '').localeCompare(b.name || '');
       }
       if (filters.sortBy === 'paroleSoon') {
-        return a.paroleEligibility.localeCompare(b.paroleEligibility);
+        return (a.paroleEligibility || '').localeCompare(b.paroleEligibility || '');
       }
       return 0;
     });

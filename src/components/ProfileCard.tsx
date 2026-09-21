@@ -36,7 +36,8 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   isBookmarked,
   onToggleBookmark,
 }) => {
-  const isRomance = inmate.seeking.includes('Romance');
+  const seekingList = Array.isArray(inmate.seeking) ? inmate.seeking : [];
+  const isRomance = seekingList.includes('Romance');
 
   return (
     <div 
@@ -144,7 +145,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
         {/* Seeking Tags */}
         <div className="mt-3 flex flex-wrap gap-1 items-center">
           <span className="text-[11px] font-semibold text-slate-500 mr-1">Seeking:</span>
-          {inmate.seeking.map(item => (
+          {seekingList.map(item => (
             <span
               key={item}
               className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${

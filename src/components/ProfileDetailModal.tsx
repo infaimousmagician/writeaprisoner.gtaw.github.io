@@ -51,7 +51,12 @@ export const ProfileDetailModal: React.FC<ProfileDetailModalProps> = ({
     : [inmate.primaryPhoto];
 
   const handleCopyAddress = () => {
-    const formatted = `${inmate.name} #${inmate.bookingNumber}\n${inmate.institutionalAddress.facilityName}\n${inmate.institutionalAddress.poBox}\n${inmate.institutionalAddress.cityStateZip}`;
+    const addr = inmate.institutionalAddress || {
+      facilityName: inmate.facility || 'Bolingbroke State Penitentiary',
+      poBox: 'P.O. Box 4500',
+      cityStateZip: 'Senora Desert, SA 93210'
+    };
+    const formatted = `${inmate.name} #${inmate.bookingNumber}\n${addr.facilityName}\n${addr.poBox}\n${addr.cityStateZip}`;
     navigator.clipboard?.writeText(formatted);
     setCopiedAddress(true);
     setTimeout(() => setCopiedAddress(false), 2500);
@@ -279,9 +284,9 @@ export const ProfileDetailModal: React.FC<ProfileDetailModalProps> = ({
                 </div>
                 <div className="font-mono bg-white p-3 rounded border border-amber-200 text-slate-800 leading-relaxed text-[11px]">
                   <p className="font-bold">{inmate.name} #{inmate.bookingNumber}</p>
-                  <p>{inmate.institutionalAddress.facilityName}</p>
-                  <p>{inmate.institutionalAddress.poBox}</p>
-                  <p>{inmate.institutionalAddress.cityStateZip}</p>
+                  <p>{inmate.institutionalAddress?.facilityName || inmate.facility}</p>
+                  <p>{inmate.institutionalAddress?.poBox || 'P.O. Box 4500'}</p>
+                  <p>{inmate.institutionalAddress?.cityStateZip || 'Senora Desert, SA 93210'}</p>
                 </div>
                 <p className="text-[11px] text-amber-800/80 mt-2 italic">
                   *Letters must be written in blue/black ink. No perfume, stickers, or polaroids allowed per Bolingbroke mailroom contraband policy.
@@ -327,7 +332,7 @@ export const ProfileDetailModal: React.FC<ProfileDetailModalProps> = ({
                   Pen-Pal Intentions & Looking For
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {inmate.seeking.map(item => (
+                  {(Array.isArray(inmate.seeking) ? inmate.seeking : []).map(item => (
                     <span
                       key={item}
                       className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full border ${
@@ -371,7 +376,7 @@ export const ProfileDetailModal: React.FC<ProfileDetailModalProps> = ({
                   Daily Pastimes & Hobbies Behind Bars
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {inmate.hobbies.map((hobby, idx) => (
+                  {(Array.isArray(inmate.hobbies) ? inmate.hobbies : []).map((hobby, idx) => (
                     <span
                       key={idx}
                       className="bg-slate-100 text-slate-700 text-xs px-2.5 py-1 rounded-md border border-slate-200"
