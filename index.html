@@ -335,7 +335,26 @@
             inmatesContainer.appendChild(card);
           });
         }, (error) => {
-          console.error("Snapshot error:", error);
+          console.error("Firestore Snapshot error:", error);
+          const inmatesContainer = document.getElementById("inmatesList");
+          const loading = document.getElementById("loadingState");
+          if (loading) loading.remove();
+          
+          // If query ordering fails before index or on first load, fallback to plain query
+          if (error.code === 'failed-precondition' || error.message.includes('requires an index')) {
+            onSnapshot(inmatesRef, (fallbackSnap) => {
+              inmatesContainer.innerHTML = "";
+              if (fallbackSnap.empty) {
+                document.getElementById("emptyState").classList.remove("hidden");
+              } else {
+                document.getElementById("emptyState").classList.add("hidden");
+                const items = [];
+                fallbackSnap.forEach(d => items.push(d.data()));
+                items.sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+                items.forEach(inmate => inmatesContainer.appendChild(createInmateCardElement(inmate)));
+              }
+            });
+          }
         });
       }
 
