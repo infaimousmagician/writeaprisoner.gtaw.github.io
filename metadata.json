@@ -1,6 +1,6 @@
 {
-  "name": "San Andreas Inmate Registry & Pen-Pal Network",
-  "description": "GTA World FiveM roleplay inmate profile directory, pen-pal messaging system, advanced search filters, and administrator moderation queue.",
+  "name": "Hello World",
+  "description": "A minimalist Hello World page.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
