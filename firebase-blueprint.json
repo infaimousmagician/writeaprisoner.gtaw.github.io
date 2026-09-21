@@ -1,0 +1,20 @@
+{
+  "entities": {
+    "inmates": {
+      "title": "Inmate Profile",
+      "description": "Inmate profiles submitted to WriteAPrisoner",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Inmate's full name" },
+        "age": { "type": "number", "description": "Age of the inmate" },
+        "state": { "type": "string", "description": "State where inmate is incarcerated" },
+        "seeking": { "type": "string", "description": "Who they are seeking, e.g. U.S. pen-pals" },
+        "bio": { "type": "string", "description": "Personal biography or letter" },
+        "imageUrl": { "type": "string", "description": "Profile picture data URL or link" },
+        "birthdayAlert": { "type": "string", "description": "Optional birthday or note" },
+        "createdAt": { "type": "string", "description": "ISO timestamp" }
+      },
+      "required": ["name", "age", "state", "bio", "createdAt"]
+    }
+  }
+}

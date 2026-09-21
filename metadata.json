@@ -1,0 +1,6 @@
+{
+  "name": "WriteAPrisoner Clone",
+  "description": "Visual layout mirroring the exact design of WriteAPrisoner.com based on the provided reference screenshot.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

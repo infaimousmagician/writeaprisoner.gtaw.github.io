@@ -3,17 +3,593 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello World</title>
-    <meta name="description" content="A minimalist Hello World page." />
-    <meta property="og:title" content="Hello World" />
-    <meta property="og:description" content="A minimalist Hello World page." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="stylesheet" href="/src/index.css" />
+    <title>WriteAPrisoner.com - Write A Prisoner... Change a life</title>
+    <meta name="description" content="Write A Prisoner... Change a life" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Source Sans 3', Arial, sans-serif;
+        background-color: #030d36;
+        color: #ffffff;
+      }
+      .font-change-life {
+        font-family: 'Playfair Display', Georgia, serif;
+      }
+      /* Custom scrollbar for modals */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 4px;
+      }
+    </style>
   </head>
-  <body class="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-6 m-0 font-sans antialiased">
-    <h1 id="hello-world-title" class="text-4xl sm:text-5xl font-bold tracking-tight text-white select-none">
-      Hello world
-    </h1>
+  <body class="min-h-screen flex flex-col antialiased bg-[#030d36]">
+
+    <!-- Top White Area: Logo in Center, Terms / Login on Top Right -->
+    <div class="bg-white text-gray-700 py-3 relative border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-6 relative flex flex-col md:flex-row items-center justify-between min-h-[55px]">
+        
+        <!-- Center Logo -->
+        <div class="md:absolute md:left-1/2 md:-translate-x-1/2 flex flex-col items-center">
+          <div class="flex items-center gap-1.5">
+            <svg class="w-8 h-8 text-[#1b439c]" viewBox="0 0 100 80" fill="currentColor">
+              <polygon points="10,70 50,15 90,70 65,70 50,42 35,70" />
+              <polygon points="38,70 50,50 62,70" fill="white" />
+              <line x1="20" y1="74" x2="80" y2="74" stroke="#1b439c" stroke-width="4" />
+            </svg>
+          </div>
+          <div class="text-center -mt-1">
+            <span class="text-sm font-extrabold tracking-tight text-[#1b439c]">WriteAPrisoner<span class="text-xs font-semibold text-gray-500">.com</span></span>
+            <div class="text-[8px] text-gray-400 font-bold uppercase tracking-widest -mt-1">Correspondence &amp; Reintegration</div>
+          </div>
+        </div>
+
+        <!-- Top Right Links -->
+        <div class="w-full md:w-auto flex justify-end items-center gap-3 text-[11px] text-gray-500 mt-2 md:mt-0 ml-auto">
+          <span class="hidden lg:inline text-gray-500">
+            Use implies agreement to <span class="text-[#1b439c] underline cursor-default">Terms</span>, <span class="text-[#1b439c] underline cursor-default">Privacy Policy</span>, and 18+.
+          </span>
+          <span class="text-[#1b439c] font-bold cursor-default ml-2">Login</span>
+          <span class="text-[#1b439c] font-bold cursor-default">Sign Up</span>
+          <svg class="w-4 h-4 text-[#1b439c] cursor-default ml-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Light Blue Sub-navigation Bar -->
+    <nav class="bg-[#38a3e5] text-white text-[13px] font-semibold py-2 px-4 shadow-sm">
+      <div class="max-w-5xl mx-auto flex items-center justify-center gap-8 md:gap-12 flex-wrap">
+        <div class="flex items-center gap-1 cursor-default hover:text-blue-100">
+          <span>Inmate Profiles</span>
+          <span class="text-[10px]">▼</span>
+        </div>
+        <!-- Active "List an Inmate" button -->
+        <button id="openListModalBtn" type="button" class="flex items-center gap-1 cursor-pointer bg-[#1b439c] hover:bg-[#15347b] text-white px-3 py-1 rounded transition shadow-xs">
+          <span>List an Inmate</span>
+          <span class="text-[10px]">＋</span>
+        </button>
+        <div class="flex items-center gap-1 cursor-default hover:text-blue-100">
+          <span>Prison Resources</span>
+          <span class="text-[10px]">▼</span>
+        </div>
+        <div class="flex items-center gap-1 cursor-default hover:text-blue-100">
+          <span>Community Programs</span>
+          <span class="text-[10px]">▼</span>
+        </div>
+        <div class="flex items-center gap-1 cursor-default hover:text-blue-100">
+          <span>About</span>
+          <span class="text-[10px]">▼</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Deep Navy Main Body -->
+    <main class="flex-1 w-full max-w-4xl mx-auto px-4 py-8">
+
+      <!-- Big Title: "Write A Prisoner... Change a life" -->
+      <div class="text-center pt-2 pb-8">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-normal inline-block">
+          <span class="text-white">Write A Prisoner...</span>
+          <span class="font-change-life italic text-[#ffd868] font-normal ml-2">Change a life</span>
+        </h1>
+      </div>
+
+      <!-- Inmates Container -->
+      <div id="inmatesList" class="space-y-6 min-h-[200px]">
+        <!-- Loading State -->
+        <div id="loadingState" class="text-center py-12 text-blue-200">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-3 border-current border-t-transparent text-[#ffd868] mb-3"></div>
+          <p class="text-sm">Connecting to inmate database...</p>
+        </div>
+      </div>
+
+      <!-- Empty State when no inmates are listed -->
+      <div id="emptyState" class="hidden text-center py-16 bg-white/5 border border-white/10 rounded-lg p-6">
+        <p class="text-lg font-bold text-white mb-2">No inmates currently listed</p>
+        <p class="text-sm text-slate-300 mb-6">Click "List an Inmate" above to post the first inmate profile and photo.</p>
+        <button id="emptyStateAddBtn" class="bg-[#38a3e5] hover:bg-[#258ecf] text-white font-bold px-5 py-2.5 rounded text-xs transition">
+          List an Inmate Now
+        </button>
+      </div>
+
+    </main>
+
+    <!-- List an Inmate Modal Dialog -->
+    <div id="modalBackdrop" class="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
+      <div class="bg-white text-gray-900 rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative">
+        
+        <!-- Close Button -->
+        <button id="closeModalBtn" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl font-bold leading-none">
+          &times;
+        </button>
+
+        <h2 class="text-xl font-bold text-[#1b439c] mb-1">List an Inmate Profile</h2>
+        <p class="text-xs text-gray-500 mb-5">Fill in the inmate's details. Profiles sync in real time for all visitors.</p>
+
+        <form id="inmateForm" class="space-y-4 text-xs">
+          
+          <!-- Name -->
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Inmate Name *</label>
+            <input 
+              type="text" 
+              id="inputName" 
+              required 
+              placeholder="e.g. Marcus Washington" 
+              class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#1b439c]"
+            />
+          </div>
+
+          <!-- Age & State Grid -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">Age *</label>
+              <input 
+                type="number" 
+                id="inputAge" 
+                required 
+                min="18" 
+                max="99" 
+                placeholder="25" 
+                class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#1b439c]"
+              />
+            </div>
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">State Incarcerated *</label>
+              <input 
+                type="text" 
+                id="inputState" 
+                required 
+                placeholder="e.g. Florida" 
+                class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#1b439c]"
+              />
+            </div>
+          </div>
+
+          <!-- Seeking Details -->
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Seeking *</label>
+            <input 
+              type="text" 
+              id="inputSeeking" 
+              required 
+              value="U.S. pen-pals" 
+              placeholder="e.g. U.S. pen-pals, legal assistance, mentorship" 
+              class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#1b439c]"
+            />
+          </div>
+
+          <!-- Picture Upload (File or Drag & Drop) -->
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Upload Inmate Picture *</label>
+            <div 
+              id="dropZone" 
+              class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-[#38a3e5] bg-gray-50 transition flex flex-col items-center justify-center gap-2"
+            >
+              <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <div class="text-xs text-gray-600">
+                <span class="font-bold text-[#1b439c]">Click to browse</span> or drag and drop image here
+              </div>
+              <p class="text-[10px] text-gray-400">JPG, PNG, GIF, WebP (compressed automatically)</p>
+              <input type="file" id="fileInput" accept="image/*" class="hidden" />
+            </div>
+            <!-- Image Preview Box -->
+            <div id="imagePreviewContainer" class="hidden mt-2 relative inline-block">
+              <img id="imagePreview" src="" alt="Preview" class="w-24 h-24 object-cover rounded border border-gray-200" />
+              <button 
+                type="button" 
+                id="removeImageBtn" 
+                class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shadow-xs hover:bg-red-700"
+              >
+                &times;
+              </button>
+            </div>
+          </div>
+
+          <!-- Bio / Personal Message -->
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Biography / About Me *</label>
+            <textarea 
+              id="inputBio" 
+              required 
+              rows="4" 
+              placeholder="Write about the inmate, their interests, personal thoughts, and who they want to connect with..." 
+              class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#1b439c]"
+            ></textarea>
+          </div>
+
+          <!-- Optional Birthday / Alert -->
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Optional Birthday Alert (e.g. Turns 25 on 11/12!)</label>
+            <input 
+              type="text" 
+              id="inputBirthday" 
+              placeholder="e.g. Turns 28 on 05/14! (Send a card)" 
+              class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#1b439c]"
+            />
+          </div>
+
+          <div id="formError" class="text-red-600 font-semibold hidden text-xs"></div>
+
+          <!-- Submit Button -->
+          <div class="pt-2 flex justify-end gap-2">
+            <button 
+              type="button" 
+              id="cancelModalBtn" 
+              class="px-4 py-2 border border-gray-300 rounded text-gray-700 font-bold hover:bg-gray-100 transition"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              id="submitBtn" 
+              class="px-5 py-2 bg-[#1b439c] hover:bg-[#15347b] text-white font-bold rounded shadow-xs transition flex items-center gap-2"
+            >
+              <span id="submitBtnText">Post Profile</span>
+              <span id="submitSpinner" class="hidden inline-block animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full"></span>
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+      import { 
+        getFirestore, 
+        collection, 
+        addDoc, 
+        onSnapshot, 
+        query, 
+        orderBy 
+      } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+      // Load config
+      let db = null;
+      let selectedImageBase64 = null;
+
+      async function initFirebase() {
+        try {
+          const res = await fetch("/firebase-applet-config.json");
+          const config = await res.json();
+          const app = initializeApp(config);
+          
+          // Connect to specific firestoreDatabaseId if configured
+          if (config.firestoreDatabaseId && config.firestoreDatabaseId !== "(default)") {
+            db = getFirestore(app, config.firestoreDatabaseId);
+          } else {
+            db = getFirestore(app);
+          }
+
+          // Start live sync
+          subscribeToInmates();
+        } catch (err) {
+          console.error("Firebase initialization failed:", err);
+          document.getElementById("loadingState").innerHTML = `
+            <p class="text-red-400 font-semibold text-sm">Failed to connect to database. Please refresh the page.</p>
+          `;
+        }
+      }
+
+      // Live subscription to inmates collection
+      function subscribeToInmates() {
+        const inmatesRef = collection(db, "inmates");
+        const q = query(inmatesRef, orderBy("createdAt", "desc"));
+
+        onSnapshot(q, (snapshot) => {
+          const inmatesContainer = document.getElementById("inmatesList");
+          const emptyState = document.getElementById("emptyState");
+          
+          // Remove loading state
+          const loading = document.getElementById("loadingState");
+          if (loading) loading.remove();
+
+          if (snapshot.empty) {
+            inmatesContainer.innerHTML = "";
+            emptyState.classList.remove("hidden");
+            return;
+          }
+
+          emptyState.classList.add("hidden");
+          inmatesContainer.innerHTML = "";
+
+          snapshot.forEach((docSnap) => {
+            const inmate = docSnap.data();
+            const card = createInmateCardElement(inmate);
+            inmatesContainer.appendChild(card);
+          });
+        }, (error) => {
+          console.error("Snapshot error:", error);
+        });
+      }
+
+      // Render single card matching user's exact screenshot layout
+      function createInmateCardElement(inmate) {
+        const card = document.createElement("div");
+        card.className = "bg-white text-gray-900 rounded-lg p-5 flex flex-col md:flex-row gap-5 shadow-lg";
+
+        // Image container with WriteAPrisoner watermark
+        const imgContainer = document.createElement("div");
+        imgContainer.className = "w-full md:w-56 shrink-0 flex justify-center";
+        
+        const imgInner = document.createElement("div");
+        imgInner.className = "relative w-52 h-52 sm:w-56 sm:h-56 bg-gray-100 rounded overflow-hidden";
+
+        const img = document.createElement("img");
+        img.src = inmate.imageUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80";
+        img.alt = inmate.name;
+        img.className = "w-full h-full object-cover object-center";
+
+        const watermark = document.createElement("div");
+        watermark.className = "absolute bottom-1.5 left-0 right-0 text-center text-[10px] text-white/80 font-medium tracking-wide drop-shadow-md";
+        watermark.textContent = "WriteAPrisoner.com";
+
+        imgInner.appendChild(img);
+        imgInner.appendChild(watermark);
+        imgContainer.appendChild(imgInner);
+
+        // Details column
+        const details = document.createElement("div");
+        details.className = "flex-1 text-[13px] leading-relaxed space-y-3";
+
+        // Title headline: e.g. "Name, age X, is incarcerated in State and seeks U.S. pen-pals."
+        const headline = document.createElement("div");
+        headline.className = "font-bold text-gray-900 text-sm";
+        const seekingText = inmate.seeking || "U.S. pen-pals";
+        headline.innerHTML = `<span class="text-[#1b439c] underline cursor-default font-bold">${escapeHtml(inmate.name)}</span>, age ${escapeHtml(String(inmate.age))}, is incarcerated in ${escapeHtml(inmate.state)} and seeks ${escapeHtml(seekingText)}.`;
+
+        // Bio paragraphs
+        const bioP = document.createElement("p");
+        bioP.className = "text-gray-700 whitespace-pre-line";
+        bioP.textContent = inmate.bio;
+
+        // Alerts container
+        const alertsDiv = document.createElement("div");
+        alertsDiv.className = "pt-1 text-[12px] space-y-0.5";
+
+        const todayAlert = document.createElement("div");
+        todayAlert.className = "font-bold text-gray-900";
+        todayAlert.textContent = "Profile Alert! This profile was posted today!";
+        alertsDiv.appendChild(todayAlert);
+
+        if (inmate.birthdayAlert && inmate.birthdayAlert.trim()) {
+          const bdayAlert = document.createElement("div");
+          bdayAlert.className = "font-bold text-gray-900";
+          bdayAlert.textContent = `Profile Alert! ${inmate.birthdayAlert}`;
+          alertsDiv.appendChild(bdayAlert);
+        }
+
+        details.appendChild(headline);
+        details.appendChild(bioP);
+        details.appendChild(alertsDiv);
+
+        card.appendChild(imgContainer);
+        card.appendChild(details);
+
+        return card;
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      // Modal Controls
+      const modalBackdrop = document.getElementById("modalBackdrop");
+      const openModalBtn = document.getElementById("openListModalBtn");
+      const closeModalBtn = document.getElementById("closeModalBtn");
+      const cancelModalBtn = document.getElementById("cancelModalBtn");
+      const emptyStateAddBtn = document.getElementById("emptyStateAddBtn");
+
+      function openModal() {
+        modalBackdrop.classList.remove("hidden");
+        document.body.classList.add("overflow-hidden");
+      }
+
+      function closeModal() {
+        modalBackdrop.classList.add("hidden");
+        document.body.classList.remove("overflow-hidden");
+        resetForm();
+      }
+
+      openModalBtn.addEventListener("click", openModal);
+      emptyStateAddBtn.addEventListener("click", openModal);
+      closeModalBtn.addEventListener("click", closeModal);
+      cancelModalBtn.addEventListener("click", closeModal);
+      modalBackdrop.addEventListener("click", (e) => {
+        if (e.target === modalBackdrop) closeModal();
+      });
+
+      // Image Upload Handling (compress to max 600px data URL so it fits Firestore seamlessly)
+      const fileInput = document.getElementById("fileInput");
+      const dropZone = document.getElementById("dropZone");
+      const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+      const imagePreview = document.getElementById("imagePreview");
+      const removeImageBtn = document.getElementById("removeImageBtn");
+
+      dropZone.addEventListener("click", () => fileInput.click());
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("border-[#1b439c]", "bg-blue-50/50");
+      });
+      dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("border-[#1b439c]", "bg-blue-50/50");
+      });
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("border-[#1b439c]", "bg-blue-50/50");
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          processFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      fileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) {
+          processFile(e.target.files[0]);
+        }
+      });
+
+      removeImageBtn.addEventListener("click", () => {
+        selectedImageBase64 = null;
+        imagePreview.src = "";
+        imagePreviewContainer.classList.add("hidden");
+        dropZone.classList.remove("hidden");
+        fileInput.value = "";
+      });
+
+      function processFile(file) {
+        if (!file.type.startsWith("image/")) {
+          alert("Please upload an image file.");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (readerEvent) => {
+          const img = new Image();
+          img.onload = () => {
+            // Compress/resize down to max 600x600 for performance and Firestore storage
+            const canvas = document.createElement("canvas");
+            let width = img.width;
+            let height = img.height;
+            const maxDimension = 600;
+
+            if (width > height && width > maxDimension) {
+              height = Math.round((height * maxDimension) / width);
+              width = maxDimension;
+            } else if (height > maxDimension) {
+              width = Math.round((width * maxDimension) / height);
+              height = maxDimension;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            selectedImageBase64 = canvas.toDataURL("image/jpeg", 0.75);
+            imagePreview.src = selectedImageBase64;
+            imagePreviewContainer.classList.remove("hidden");
+            dropZone.classList.add("hidden");
+          };
+          img.src = readerEvent.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function resetForm() {
+        document.getElementById("inmateForm").reset();
+        selectedImageBase64 = null;
+        imagePreview.src = "";
+        imagePreviewContainer.classList.add("hidden");
+        dropZone.classList.remove("hidden");
+        document.getElementById("formError").classList.add("hidden");
+        document.getElementById("formError").textContent = "";
+      }
+
+      // Form Submission
+      const form = document.getElementById("inmateForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const submitBtnText = document.getElementById("submitBtnText");
+      const submitSpinner = document.getElementById("submitSpinner");
+      const formError = document.getElementById("formError");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        formError.classList.add("hidden");
+        formError.textContent = "";
+
+        if (!selectedImageBase64) {
+          formError.textContent = "Please upload a photo for the inmate.";
+          formError.classList.remove("hidden");
+          return;
+        }
+
+        const name = document.getElementById("inputName").value.trim();
+        const age = parseInt(document.getElementById("inputAge").value, 10);
+        const state = document.getElementById("inputState").value.trim();
+        const seeking = document.getElementById("inputSeeking").value.trim();
+        const bio = document.getElementById("inputBio").value.trim();
+        const birthdayAlert = document.getElementById("inputBirthday").value.trim();
+
+        if (!name || isNaN(age) || !state || !bio) {
+          formError.textContent = "Please fill in all required fields.";
+          formError.classList.remove("hidden");
+          return;
+        }
+
+        // Disable submit button
+        submitBtn.disabled = true;
+        submitBtnText.textContent = "Posting...";
+        submitSpinner.classList.remove("hidden");
+
+        try {
+          const inmatesRef = collection(db, "inmates");
+          await addDoc(inmatesRef, {
+            name,
+            age,
+            state,
+            seeking,
+            bio,
+            imageUrl: selectedImageBase64,
+            birthdayAlert: birthdayAlert || "",
+            createdAt: new Date().toISOString()
+          });
+
+          closeModal();
+        } catch (err) {
+          console.error("Error adding inmate:", err);
+          formError.textContent = "Failed to post inmate profile. Please try again.";
+          formError.classList.remove("hidden");
+        } finally {
+          submitBtn.disabled = false;
+          submitBtnText.textContent = "Post Profile";
+          submitSpinner.classList.add("hidden");
+        }
+      });
+
+      // Start
+      initFirebase();
+    </script>
+
   </body>
 </html>

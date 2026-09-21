@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /inmates/{inmateId} {
+      allow read: if true;
+      allow create: if request.resource.data.name is string 
+                    && request.resource.data.age is number
+                    && request.resource.data.state is string
+                    && request.resource.data.bio is string;
+      allow update, delete: if false;
+    }
+  }
+}
