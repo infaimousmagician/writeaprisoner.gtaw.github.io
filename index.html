@@ -284,15 +284,34 @@
       let db = null;
       let selectedImageBase64 = null;
 
+      // Fallback config to ensure deployment / shared previews always connect even if fetch fails
+      const DEFAULT_FIREBASE_CONFIG = {
+        projectId: "gen-lang-client-0434513213",
+        appId: "1:879015663008:web:ba62905dcc923339fc80c5",
+        apiKey: "AIzaSyCufrYaB1EwfHGiHKPoXHlV22IHhvC0jUw",
+        authDomain: "gen-lang-client-0434513213.firebaseapp.com",
+        firestoreDatabaseId: "ai-studio-writeaprisonergt-0faeeb4c-538a-475c-8748-cc33a87e1c1b",
+        storageBucket: "gen-lang-client-0434513213.firebasestorage.app",
+        messagingSenderId: "879015663008"
+      };
+
       async function initFirebase() {
         try {
-          const res = await fetch("/firebase-applet-config.json");
-          const config = await res.json();
+          let config = DEFAULT_FIREBASE_CONFIG;
+          try {
+            const res = await fetch("/firebase-applet-config.json");
+            if (res.ok) {
+              config = await res.json();
+            }
+          } catch (e) {
+            console.warn("Using embedded firebase config fallback");
+          }
+
           const app = initializeApp(config);
           
-          // Connect to specific firestoreDatabaseId if configured
-          if (config.firestoreDatabaseId && config.firestoreDatabaseId !== "(default)") {
-            db = getFirestore(app, config.firestoreDatabaseId);
+          const dbId = config.firestoreDatabaseId;
+          if (dbId && dbId !== "(default)") {
+            db = getFirestore(app, dbId);
           } else {
             db = getFirestore(app);
           }
@@ -302,7 +321,7 @@
         } catch (err) {
           console.error("Firebase initialization failed:", err);
           document.getElementById("loadingState").innerHTML = `
-            <p class="text-red-400 font-semibold text-sm">Failed to connect to database. Please refresh the page.</p>
+            <p class="text-red-400 font-semibold text-sm">Failed to connect to database: ${err.message || 'Unknown error'}. Please refresh the page.</p>
           `;
         }
       }
