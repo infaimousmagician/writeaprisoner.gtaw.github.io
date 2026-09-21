@@ -33,7 +33,7 @@
   </head>
   <body class="min-h-screen flex flex-col antialiased bg-[#030d36]">
 
-    <!-- Top White Area: Logo in Center, Terms / Login on Top Right -->
+    <!-- Top White Area: Logo in Center, Terms / Admin Login on Top Right -->
     <div class="bg-white text-gray-700 py-3 relative border-b border-gray-100">
       <div class="max-w-7xl mx-auto px-6 relative flex flex-col md:flex-row items-center justify-between min-h-[55px]">
         
@@ -52,13 +52,35 @@
           </div>
         </div>
 
-        <!-- Top Right Links -->
+        <!-- Top Right Links & Admin Auth Controls -->
         <div class="w-full md:w-auto flex justify-end items-center gap-3 text-[11px] text-gray-500 mt-2 md:mt-0 ml-auto">
           <span class="hidden lg:inline text-gray-500">
             Use implies agreement to <span class="text-[#1b439c] underline cursor-default">Terms</span>, <span class="text-[#1b439c] underline cursor-default">Privacy Policy</span>, and 18+.
           </span>
-          <span class="text-[#1b439c] font-bold cursor-default ml-2">Login</span>
-          <span class="text-[#1b439c] font-bold cursor-default">Sign Up</span>
+          
+          <!-- Signed In Admin View -->
+          <div id="adminUserSection" class="hidden items-center gap-2">
+            <span class="bg-amber-100 text-amber-900 border border-amber-300 font-bold px-2 py-0.5 rounded text-[10px] flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
+              Admin: <span id="adminUserEmail" class="font-mono">admin</span>
+            </span>
+            <button id="adminLogoutBtn" type="button" class="text-red-600 hover:text-red-800 font-bold cursor-pointer underline ml-1">
+              Logout
+            </button>
+          </div>
+
+          <!-- Signed Out / Login Button -->
+          <div id="guestUserSection" class="flex items-center gap-2">
+            <button id="openAdminLoginBtn" type="button" class="text-[#1b439c] hover:text-blue-900 font-bold cursor-pointer ml-2 flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+              <span>Admin Login</span>
+            </button>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-400 cursor-default">Sign Up</span>
+          </div>
+
           <svg class="w-4 h-4 text-[#1b439c] cursor-default ml-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
@@ -98,11 +120,35 @@
     <main class="flex-1 w-full max-w-4xl mx-auto px-4 py-8">
 
       <!-- Big Title: "Write A Prisoner... Change a life" -->
-      <div class="text-center pt-2 pb-8">
+      <div class="text-center pt-2 pb-6">
         <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-normal inline-block">
           <span class="text-white">Write A Prisoner...</span>
           <span class="font-change-life italic text-[#ffd868] font-normal ml-2">Change a life</span>
         </h1>
+      </div>
+
+      <!-- Admin Moderation Filter Bar (shown when admin is logged in) -->
+      <div id="adminTabBar" class="hidden mb-6 bg-slate-900/90 border border-amber-400/40 rounded-lg p-3 text-xs shadow-md">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <span class="bg-amber-500 text-black font-extrabold px-2 py-0.5 rounded text-[10px] uppercase tracking-wide">
+              Admin Moderation
+            </span>
+            <span class="text-slate-300 text-xs">Review submissions, approve, deny, or delete profiles.</span>
+          </div>
+          <!-- Tab buttons -->
+          <div class="flex items-center gap-1 bg-black/40 p-1 rounded border border-white/10">
+            <button id="tabPendingBtn" type="button" class="px-3 py-1 rounded font-bold transition text-black bg-[#ffd868]">
+              Pending (<span id="pendingCount">0</span>)
+            </button>
+            <button id="tabApprovedBtn" type="button" class="px-3 py-1 rounded font-bold transition text-slate-300 hover:text-white">
+              Approved (<span id="approvedCount">0</span>)
+            </button>
+            <button id="tabDeniedBtn" type="button" class="px-3 py-1 rounded font-bold transition text-slate-300 hover:text-white">
+              Denied (<span id="deniedCount">0</span>)
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Inmates Container -->
@@ -116,8 +162,8 @@
 
       <!-- Empty State when no inmates are listed -->
       <div id="emptyState" class="hidden text-center py-16 bg-white/5 border border-white/10 rounded-lg p-6">
-        <p class="text-lg font-bold text-white mb-2">No inmates currently listed</p>
-        <p class="text-sm text-slate-300 mb-6">Click "List an Inmate" above to post the first inmate profile and photo.</p>
+        <p id="emptyStateTitle" class="text-lg font-bold text-white mb-2">No inmates currently listed</p>
+        <p id="emptyStateDesc" class="text-sm text-slate-300 mb-6">Click "List an Inmate" above to post the first inmate profile and photo.</p>
         <button id="emptyStateAddBtn" class="bg-[#38a3e5] hover:bg-[#258ecf] text-white font-bold px-5 py-2.5 rounded text-xs transition">
           List an Inmate Now
         </button>
@@ -135,7 +181,7 @@
         </button>
 
         <h2 class="text-xl font-bold text-[#1b439c] mb-1">List an Inmate Profile</h2>
-        <p class="text-xs text-gray-500 mb-5">Fill in the inmate's details. Profiles sync in real time for all visitors.</p>
+        <p class="text-xs text-gray-500 mb-5">Fill in the inmate's details. Submissions will be reviewed by an administrator before appearing publicly.</p>
 
         <form id="inmateForm" class="space-y-4 text-xs">
           
@@ -151,7 +197,7 @@
             />
           </div>
 
-          <!-- Age & State Grid -->
+          <!-- Age & Hometown Grid -->
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block font-bold text-gray-700 mb-1">Age *</label>
@@ -166,12 +212,12 @@
               />
             </div>
             <div>
-              <label class="block font-bold text-gray-700 mb-1">State Incarcerated *</label>
+              <label class="block font-bold text-gray-700 mb-1">Hometown *</label>
               <input 
                 type="text" 
-                id="inputState" 
+                id="inputHometown" 
                 required 
-                placeholder="e.g. Florida" 
+                placeholder="e.g. Los Santos, SA" 
                 class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#1b439c]"
               />
             </div>
@@ -258,13 +304,114 @@
               id="submitBtn" 
               class="px-5 py-2 bg-[#1b439c] hover:bg-[#15347b] text-white font-bold rounded shadow-xs transition flex items-center gap-2"
             >
-              <span id="submitBtnText">Post Profile</span>
+              <span id="submitBtnText">Submit Profile</span>
               <span id="submitSpinner" class="hidden inline-block animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full"></span>
             </button>
           </div>
 
         </form>
 
+      </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
+      <div class="bg-white text-gray-900 rounded-lg max-w-sm w-full shadow-2xl p-6 relative">
+        
+        <button id="closeAdminLoginBtn" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl font-bold leading-none">
+          &times;
+        </button>
+
+        <div class="flex items-center gap-2 mb-2">
+          <div class="p-2 bg-[#1b439c]/10 text-[#1b439c] rounded-md">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-gray-900">Admin Sign In</h2>
+            <p class="text-[11px] text-gray-500">Sign in to approve, deny, or delete profiles.</p>
+          </div>
+        </div>
+
+        <form id="adminLoginForm" class="space-y-3.5 mt-4 text-xs">
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Username</label>
+            <input 
+              type="text" 
+              id="adminUsernameInput" 
+              required 
+              autocomplete="username"
+              placeholder="admin" 
+              class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#1b439c]"
+            />
+          </div>
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Password</label>
+            <input 
+              type="password" 
+              id="adminPasswordInput" 
+              required 
+              autocomplete="current-password"
+              placeholder="••••••••" 
+              class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-[#1b439c]"
+            />
+          </div>
+
+          <div id="adminLoginError" class="text-red-600 font-semibold hidden text-xs leading-tight"></div>
+
+          <div class="pt-2 flex flex-col gap-2">
+            <button 
+              type="submit" 
+              id="adminSubmitLoginBtn" 
+              class="w-full py-2.5 bg-[#1b439c] hover:bg-[#15347b] text-white font-bold rounded shadow-xs transition flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span id="adminLoginBtnText">Sign In</span>
+              <span id="adminLoginSpinner" class="hidden inline-block animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full"></span>
+            </button>
+            <p class="text-[11px] text-gray-400 text-center leading-normal">
+              Admin panel access is restricted to authorized personnel only.
+            </p>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <!-- Custom Delete Confirmation Modal (iFrame-friendly, avoids blocked window.confirm) -->
+    <div id="deleteConfirmModal" class="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
+      <div class="bg-white text-gray-900 rounded-lg max-w-md w-full shadow-2xl p-6 relative border border-gray-100">
+        <div class="flex items-start gap-3">
+          <div class="p-2.5 bg-rose-100 text-rose-600 rounded-full shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-base font-bold text-gray-900">Delete Inmate Profile</h3>
+            <p class="text-xs text-gray-600 mt-1 leading-relaxed">
+              Are you sure you want to permanently delete the profile for <span id="deleteInmateNameTarget" class="font-bold text-gray-900">this inmate</span>? This action cannot be undone.
+            </p>
+            <div id="deleteModalError" class="text-rose-600 text-xs font-semibold mt-2 hidden"></div>
+          </div>
+        </div>
+        <div class="mt-5 flex justify-end gap-2.5">
+          <button 
+            type="button" 
+            id="cancelDeleteBtn" 
+            class="px-4 py-2 border border-gray-300 rounded text-gray-700 font-bold text-xs hover:bg-gray-100 transition cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button 
+            type="button" 
+            id="confirmDeleteBtn" 
+            class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded shadow-xs transition flex items-center gap-1.5 cursor-pointer"
+          >
+            <span id="confirmDeleteBtnText">Delete Profile</span>
+            <span id="confirmDeleteSpinner" class="hidden inline-block animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full"></span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -275,16 +422,52 @@
         getFirestore, 
         collection, 
         addDoc, 
+        doc,
+        updateDoc,
+        deleteDoc,
         onSnapshot, 
         query, 
         orderBy 
       } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        signOut,
+        onAuthStateChanged
+      } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
-      // Load config
+      // Global state
       let db = null;
+      let auth = null;
+      let currentUser = null;
+      let isAdminLoggedIn = false; // Strictly controlled by username: "admin" and password: "123321"
       let selectedImageBase64 = null;
+      let currentAdminTab = "pending"; // "pending" | "approved" | "denied"
+      let allInmates = []; // cached list of all docs with ids
+      let deleteTargetDocId = null;
+      let deleteTargetDocName = "";
 
-      // Fallback config to ensure deployment / shared previews always connect even if fetch fails
+      // Ensure system admin Firebase Auth session is active
+      async function ensureAdminAuth() {
+        if (!auth) return;
+        if (auth.currentUser) return;
+        try {
+          const adminSystemEmail = "admin@writeaprisoner.system";
+          const adminSystemPass = "123321";
+          try {
+            await signInWithEmailAndPassword(auth, adminSystemEmail, adminSystemPass);
+          } catch (signInErr) {
+            if (signInErr.code === "auth/user-not-found" || signInErr.code === "auth/invalid-credential") {
+              await createUserWithEmailAndPassword(auth, adminSystemEmail, adminSystemPass);
+            }
+          }
+        } catch (e) {
+          console.warn("Could not establish Firebase Auth session for admin:", e);
+        }
+      }
+
+      // Fallback config to ensure deployment / shared previews always connect
       const DEFAULT_FIREBASE_CONFIG = {
         projectId: "gen-lang-client-0434513213",
         appId: "1:879015663008:web:ba62905dcc923339fc80c5",
@@ -308,6 +491,7 @@
           }
 
           const app = initializeApp(config);
+          auth = getAuth(app);
           
           const dbId = config.firestoreDatabaseId;
           if (dbId && dbId !== "(default)") {
@@ -315,6 +499,25 @@
           } else {
             db = getFirestore(app);
           }
+
+          // Check for saved admin session in sessionStorage
+          try {
+            if (sessionStorage.getItem("writeaprisoner_admin_logged_in") === "true") {
+              isAdminLoggedIn = true;
+              ensureAdminAuth();
+            }
+          } catch (e) {
+            console.warn("Session storage not accessible", e);
+          }
+
+          // Monitor Auth state
+          onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            updateAdminUI();
+            renderInmates();
+          });
+
+          updateAdminUI();
 
           // Start live sync
           subscribeToInmates();
@@ -326,61 +529,126 @@
         }
       }
 
+      function updateAdminUI() {
+        const adminSection = document.getElementById("adminUserSection");
+        const guestSection = document.getElementById("guestUserSection");
+        const adminEmail = document.getElementById("adminUserEmail");
+        const adminTabBar = document.getElementById("adminTabBar");
+
+        if (isAdminLoggedIn) {
+          adminSection.classList.remove("hidden");
+          adminSection.classList.add("flex");
+          guestSection.classList.add("hidden");
+          adminEmail.textContent = "admin";
+          adminTabBar.classList.remove("hidden");
+        } else {
+          adminSection.classList.add("hidden");
+          adminSection.classList.remove("flex");
+          guestSection.classList.remove("hidden");
+          adminTabBar.classList.add("hidden");
+        }
+      }
+
       // Live subscription to inmates collection
       function subscribeToInmates() {
         const inmatesRef = collection(db, "inmates");
         const q = query(inmatesRef, orderBy("createdAt", "desc"));
 
         onSnapshot(q, (snapshot) => {
-          const inmatesContainer = document.getElementById("inmatesList");
-          const emptyState = document.getElementById("emptyState");
-          
-          // Remove loading state
           const loading = document.getElementById("loadingState");
           if (loading) loading.remove();
 
-          if (snapshot.empty) {
-            inmatesContainer.innerHTML = "";
-            emptyState.classList.remove("hidden");
-            return;
-          }
-
-          emptyState.classList.add("hidden");
-          inmatesContainer.innerHTML = "";
-
+          allInmates = [];
           snapshot.forEach((docSnap) => {
-            const inmate = docSnap.data();
-            const card = createInmateCardElement(inmate);
-            inmatesContainer.appendChild(card);
+            const data = docSnap.data();
+            allInmates.push({
+              id: docSnap.id,
+              ...data,
+              // default to approved if status wasn't set previously
+              status: data.status || "approved"
+            });
           });
+
+          updateCounts();
+          renderInmates();
         }, (error) => {
           console.error("Firestore Snapshot error:", error);
-          const inmatesContainer = document.getElementById("inmatesList");
           const loading = document.getElementById("loadingState");
           if (loading) loading.remove();
           
-          // If query ordering fails before index or on first load, fallback to plain query
+          // Fallback if ordering requires composite index
           if (error.code === 'failed-precondition' || error.message.includes('requires an index')) {
             onSnapshot(inmatesRef, (fallbackSnap) => {
-              inmatesContainer.innerHTML = "";
-              if (fallbackSnap.empty) {
-                document.getElementById("emptyState").classList.remove("hidden");
-              } else {
-                document.getElementById("emptyState").classList.add("hidden");
-                const items = [];
-                fallbackSnap.forEach(d => items.push(d.data()));
-                items.sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
-                items.forEach(inmate => inmatesContainer.appendChild(createInmateCardElement(inmate)));
-              }
+              allInmates = [];
+              fallbackSnap.forEach((docSnap) => {
+                const data = docSnap.data();
+                allInmates.push({
+                  id: docSnap.id,
+                  ...data,
+                  status: data.status || "approved"
+                });
+              });
+              allInmates.sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+              updateCounts();
+              renderInmates();
             });
           }
         });
       }
 
-      // Render single card matching user's exact screenshot layout
+      function updateCounts() {
+        const pending = allInmates.filter(i => i.status === "pending").length;
+        const approved = allInmates.filter(i => i.status === "approved").length;
+        const denied = allInmates.filter(i => i.status === "denied").length;
+
+        document.getElementById("pendingCount").textContent = pending;
+        document.getElementById("approvedCount").textContent = approved;
+        document.getElementById("deniedCount").textContent = denied;
+      }
+
+      // Render inmates based on viewer role & selected tab
+      function renderInmates() {
+        const inmatesContainer = document.getElementById("inmatesList");
+        const emptyState = document.getElementById("emptyState");
+        const emptyStateTitle = document.getElementById("emptyStateTitle");
+        const emptyStateDesc = document.getElementById("emptyStateDesc");
+
+        let displayList = [];
+
+        if (isAdminLoggedIn) {
+          // Admin viewing selected moderation tab
+          displayList = allInmates.filter(i => i.status === currentAdminTab);
+        } else {
+          // Public visitor only sees approved profiles
+          displayList = allInmates.filter(i => i.status === "approved");
+        }
+
+        if (displayList.length === 0) {
+          inmatesContainer.innerHTML = "";
+          emptyState.classList.remove("hidden");
+          if (isAdminLoggedIn) {
+            emptyStateTitle.textContent = `No ${currentAdminTab} profiles`;
+            emptyStateDesc.textContent = `There are currently no profiles under the "${currentAdminTab}" tab.`;
+          } else {
+            emptyStateTitle.textContent = "No inmates currently listed";
+            emptyStateDesc.textContent = 'Click "List an Inmate" above to post the first inmate profile and photo.';
+          }
+          return;
+        }
+
+        emptyState.classList.add("hidden");
+        inmatesContainer.innerHTML = "";
+
+        displayList.forEach((inmate) => {
+          const card = createInmateCardElement(inmate);
+          inmatesContainer.appendChild(card);
+        });
+      }
+
+      // Render single card matching user's exact screenshot layout + optional Admin Actions
       function createInmateCardElement(inmate) {
         const card = document.createElement("div");
-        card.className = "bg-white text-gray-900 rounded-lg p-5 flex flex-col md:flex-row gap-5 shadow-lg";
+        card.className = "bg-white text-gray-900 rounded-lg p-5 flex flex-col md:flex-row gap-5 shadow-lg relative border border-gray-100";
 
         // Image container with WriteAPrisoner watermark
         const imgContainer = document.createElement("div");
@@ -404,13 +672,35 @@
 
         // Details column
         const details = document.createElement("div");
-        details.className = "flex-1 text-[13px] leading-relaxed space-y-3";
+        details.className = "flex-1 text-[13px] leading-relaxed space-y-3 flex flex-col justify-between";
 
-        // Title headline: e.g. "Name, age X, is incarcerated in State and seeks U.S. pen-pals."
+        const topContent = document.createElement("div");
+        topContent.className = "space-y-3";
+
+        // Status badge for Admin
+        if (isAdminLoggedIn) {
+          const badgeRow = document.createElement("div");
+          badgeRow.className = "flex items-center justify-between gap-2 pb-1 border-b border-gray-100";
+          
+          let badgeClass = "bg-yellow-100 text-yellow-800 border-yellow-300";
+          if (inmate.status === "approved") badgeClass = "bg-emerald-100 text-emerald-800 border-emerald-300";
+          if (inmate.status === "denied") badgeClass = "bg-rose-100 text-rose-800 border-rose-300";
+
+          badgeRow.innerHTML = `
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded border ${badgeClass} uppercase tracking-wider">
+              Status: ${escapeHtml(inmate.status)}
+            </span>
+            <span class="text-[10px] text-gray-400 font-mono">ID: ${escapeHtml(inmate.id.substring(0, 8))}...</span>
+          `;
+          topContent.appendChild(badgeRow);
+        }
+
+        // Title headline: e.g. "Name, age X, hometown Hometown, and seeks U.S. pen-pals."
         const headline = document.createElement("div");
         headline.className = "font-bold text-gray-900 text-sm";
         const seekingText = inmate.seeking || "U.S. pen-pals";
-        headline.innerHTML = `<span class="text-[#1b439c] underline cursor-default font-bold">${escapeHtml(inmate.name)}</span>, age ${escapeHtml(String(inmate.age))}, is incarcerated in ${escapeHtml(inmate.state)} and seeks ${escapeHtml(seekingText)}.`;
+        const hometownText = inmate.hometown || inmate.state || "Not specified";
+        headline.innerHTML = `<span class="text-[#1b439c] underline cursor-default font-bold">${escapeHtml(inmate.name)}</span>, age ${escapeHtml(String(inmate.age))}, hometown ${escapeHtml(hometownText)}, and seeks ${escapeHtml(seekingText)}.`;
 
         // Bio paragraphs
         const bioP = document.createElement("p");
@@ -433,15 +723,130 @@
           alertsDiv.appendChild(bdayAlert);
         }
 
-        details.appendChild(headline);
-        details.appendChild(bioP);
-        details.appendChild(alertsDiv);
+        topContent.appendChild(headline);
+        topContent.appendChild(bioP);
+        topContent.appendChild(alertsDiv);
+        details.appendChild(topContent);
+
+        // Admin Action Controls (Approve, Deny, Delete)
+        if (isAdminLoggedIn) {
+          const adminControls = document.createElement("div");
+          adminControls.className = "pt-3 mt-3 border-t border-gray-100 flex items-center justify-between flex-wrap gap-2";
+
+          const actionBtns = document.createElement("div");
+          actionBtns.className = "flex items-center gap-2";
+
+          // Approve button (if not approved)
+          if (inmate.status !== "approved") {
+            const approveBtn = document.createElement("button");
+            approveBtn.type = "button";
+            approveBtn.className = "bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 rounded transition flex items-center gap-1 shadow-xs cursor-pointer";
+            approveBtn.innerHTML = `<span>✓</span> <span>Approve</span>`;
+            approveBtn.onclick = () => updateInmateStatus(inmate.id, "approved");
+            actionBtns.appendChild(approveBtn);
+          }
+
+          // Deny button (if not denied)
+          if (inmate.status !== "denied") {
+            const denyBtn = document.createElement("button");
+            denyBtn.type = "button";
+            denyBtn.className = "bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3 py-1.5 rounded transition flex items-center gap-1 shadow-xs cursor-pointer";
+            denyBtn.innerHTML = `<span>✕</span> <span>Deny</span>`;
+            denyBtn.onclick = () => updateInmateStatus(inmate.id, "denied");
+            actionBtns.appendChild(denyBtn);
+          }
+
+          // Delete button (Permanent removal)
+          const deleteBtn = document.createElement("button");
+          deleteBtn.type = "button";
+          deleteBtn.className = "bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs px-3 py-1.5 rounded transition flex items-center gap-1 shadow-xs ml-auto cursor-pointer";
+          deleteBtn.innerHTML = `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg> <span>Delete</span>`;
+          deleteBtn.onclick = () => deleteInmateProfile(inmate.id, inmate.name);
+
+          adminControls.appendChild(actionBtns);
+          adminControls.appendChild(deleteBtn);
+          details.appendChild(adminControls);
+        }
 
         card.appendChild(imgContainer);
         card.appendChild(details);
 
         return card;
       }
+
+      // Admin actions: Approve or Deny
+      async function updateInmateStatus(docId, newStatus) {
+        try {
+          await ensureAdminAuth();
+          const docRef = doc(db, "inmates", docId);
+          await updateDoc(docRef, { status: newStatus });
+        } catch (err) {
+          console.error(`Error updating profile status to ${newStatus}:`, err);
+          alert(`Failed to update profile: ${err.message}`);
+        }
+      }
+
+      // Admin action: Open custom delete confirmation modal
+      const deleteConfirmModal = document.getElementById("deleteConfirmModal");
+      const deleteInmateNameTarget = document.getElementById("deleteInmateNameTarget");
+      const deleteModalError = document.getElementById("deleteModalError");
+      const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+      const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+      const confirmDeleteBtnText = document.getElementById("confirmDeleteBtnText");
+      const confirmDeleteSpinner = document.getElementById("confirmDeleteSpinner");
+
+      function deleteInmateProfile(docId, inmateName) {
+        deleteTargetDocId = docId;
+        deleteTargetDocName = inmateName || "this inmate";
+        deleteInmateNameTarget.textContent = deleteTargetDocName;
+        deleteModalError.classList.add("hidden");
+        deleteModalError.textContent = "";
+        deleteConfirmModal.classList.remove("hidden");
+      }
+
+      function closeDeleteModal() {
+        deleteConfirmModal.classList.add("hidden");
+        deleteTargetDocId = null;
+        deleteTargetDocName = "";
+        confirmDeleteBtn.disabled = false;
+        confirmDeleteBtnText.textContent = "Delete Profile";
+        confirmDeleteSpinner.classList.add("hidden");
+      }
+
+      cancelDeleteBtn.addEventListener("click", closeDeleteModal);
+
+      deleteConfirmModal.addEventListener("click", (e) => {
+        if (e.target === deleteConfirmModal) closeDeleteModal();
+      });
+
+      confirmDeleteBtn.addEventListener("click", async () => {
+        if (!deleteTargetDocId) return;
+
+        confirmDeleteBtn.disabled = true;
+        confirmDeleteBtnText.textContent = "Deleting...";
+        confirmDeleteSpinner.classList.remove("hidden");
+        deleteModalError.classList.add("hidden");
+
+        try {
+          // Ensure admin auth is established
+          await ensureAdminAuth();
+          const docRef = doc(db, "inmates", deleteTargetDocId);
+          await deleteDoc(docRef);
+
+          // Optimistically remove from local state immediately for instant feedback
+          allInmates = allInmates.filter(i => i.id !== deleteTargetDocId);
+          renderInmates();
+
+          closeDeleteModal();
+        } catch (err) {
+          console.error("Error deleting inmate profile:", err);
+          deleteModalError.textContent = `Failed to delete profile: ${err.message || 'Permission denied or network error'}.`;
+          deleteModalError.classList.remove("hidden");
+          confirmDeleteBtn.disabled = false;
+          confirmDeleteBtnText.textContent = "Delete Profile";
+          confirmDeleteSpinner.classList.add("hidden");
+        }
+      });
 
       function escapeHtml(str) {
         return String(str)
@@ -452,20 +857,145 @@
           .replace(/'/g, "&#039;");
       }
 
-      // Modal Controls
-      const modalBackdrop = document.getElementById("modalBackdrop");
+      // Tab bar event listeners
+      const tabPendingBtn = document.getElementById("tabPendingBtn");
+      const tabApprovedBtn = document.getElementById("tabApprovedBtn");
+      const tabDeniedBtn = document.getElementById("tabDeniedBtn");
+
+      function setTab(tab) {
+        currentAdminTab = tab;
+        const tabs = [
+          { name: "pending", btn: tabPendingBtn },
+          { name: "approved", btn: tabApprovedBtn },
+          { name: "denied", btn: tabDeniedBtn }
+        ];
+
+        tabs.forEach(t => {
+          if (t.name === tab) {
+            t.btn.className = "px-3 py-1 rounded font-bold transition text-black bg-[#ffd868]";
+          } else {
+            t.btn.className = "px-3 py-1 rounded font-bold transition text-slate-300 hover:text-white";
+          }
+        });
+
+        renderInmates();
+      }
+
+      tabPendingBtn.addEventListener("click", () => setTab("pending"));
+      tabApprovedBtn.addEventListener("click", () => setTab("approved"));
+      tabDeniedBtn.addEventListener("click", () => setTab("denied"));
+
+      // Admin Login / Logout modal handlers
+      const adminLoginModal = document.getElementById("adminLoginModal");
+      const openAdminLoginBtn = document.getElementById("openAdminLoginBtn");
+      const closeAdminLoginBtn = document.getElementById("closeAdminLoginBtn");
+      const adminLoginForm = document.getElementById("adminLoginForm");
+      const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+      const adminLoginError = document.getElementById("adminLoginError");
+      const adminSubmitLoginBtn = document.getElementById("adminSubmitLoginBtn");
+      const adminLoginBtnText = document.getElementById("adminLoginBtnText");
+      const adminLoginSpinner = document.getElementById("adminLoginSpinner");
+
+      openAdminLoginBtn.addEventListener("click", () => {
+        adminLoginError.classList.add("hidden");
+        adminLoginError.textContent = "";
+        adminLoginModal.classList.remove("hidden");
+      });
+
+      closeAdminLoginBtn.addEventListener("click", () => {
+        adminLoginModal.classList.add("hidden");
+      });
+
+      adminLoginModal.addEventListener("click", (e) => {
+        if (e.target === adminLoginModal) adminLoginModal.classList.add("hidden");
+      });
+
+      adminLogoutBtn.addEventListener("click", async () => {
+        try {
+          isAdminLoggedIn = false;
+          try {
+            sessionStorage.removeItem("writeaprisoner_admin_logged_in");
+          } catch (e) {}
+          if (auth && auth.currentUser) {
+            await signOut(auth);
+          }
+        } catch (err) {
+          console.error("Sign out error:", err);
+        } finally {
+          updateAdminUI();
+          renderInmates();
+        }
+      });
+
+      adminLoginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        adminLoginError.classList.add("hidden");
+        adminLoginError.textContent = "";
+
+        const username = document.getElementById("adminUsernameInput").value.trim();
+        const password = document.getElementById("adminPasswordInput").value;
+
+        if (!username || !password) {
+          adminLoginError.textContent = "Please enter both username and password.";
+          adminLoginError.classList.remove("hidden");
+          return;
+        }
+
+        adminSubmitLoginBtn.disabled = true;
+        adminLoginBtnText.textContent = "Signing In...";
+        adminLoginSpinner.classList.remove("hidden");
+
+        // Strict single admin account credentials check
+        if (username !== "admin" || password !== "123321") {
+          setTimeout(() => {
+            adminSubmitLoginBtn.disabled = false;
+            adminLoginBtnText.textContent = "Sign In";
+            adminLoginSpinner.classList.add("hidden");
+            adminLoginError.textContent = "Invalid admin username or password.";
+            adminLoginError.classList.remove("hidden");
+          }, 350);
+          return;
+        }
+
+        try {
+          // Establish Firebase Auth session for admin database permissions
+          await ensureAdminAuth();
+
+          // Successfully validated admin
+          isAdminLoggedIn = true;
+          try {
+            sessionStorage.setItem("writeaprisoner_admin_logged_in", "true");
+          } catch (e) {}
+
+          updateAdminUI();
+          renderInmates();
+
+          adminLoginModal.classList.add("hidden");
+          adminLoginForm.reset();
+        } catch (err) {
+          adminLoginError.textContent = "Failed to sign in. Please try again.";
+          adminLoginError.classList.remove("hidden");
+        } finally {
+          adminSubmitLoginBtn.disabled = false;
+          adminLoginBtnText.textContent = "Sign In";
+          adminLoginSpinner.classList.add("hidden");
+        }
+      });
+
+      // Modal Handlers (List an Inmate)
+      const modal = document.getElementById("modalBackdrop");
       const openModalBtn = document.getElementById("openListModalBtn");
       const closeModalBtn = document.getElementById("closeModalBtn");
       const cancelModalBtn = document.getElementById("cancelModalBtn");
       const emptyStateAddBtn = document.getElementById("emptyStateAddBtn");
 
       function openModal() {
-        modalBackdrop.classList.remove("hidden");
+        modal.classList.remove("hidden");
         document.body.classList.add("overflow-hidden");
       }
 
       function closeModal() {
-        modalBackdrop.classList.add("hidden");
+        modal.classList.add("hidden");
         document.body.classList.remove("overflow-hidden");
         resetForm();
       }
@@ -474,11 +1004,11 @@
       emptyStateAddBtn.addEventListener("click", openModal);
       closeModalBtn.addEventListener("click", closeModal);
       cancelModalBtn.addEventListener("click", closeModal);
-      modalBackdrop.addEventListener("click", (e) => {
-        if (e.target === modalBackdrop) closeModal();
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
       });
 
-      // Image Upload Handling (compress to max 600px data URL so it fits Firestore seamlessly)
+      // Image Upload Drag and Drop
       const fileInput = document.getElementById("fileInput");
       const dropZone = document.getElementById("dropZone");
       const imagePreviewContainer = document.getElementById("imagePreviewContainer");
@@ -486,13 +1016,16 @@
       const removeImageBtn = document.getElementById("removeImageBtn");
 
       dropZone.addEventListener("click", () => fileInput.click());
+
       dropZone.addEventListener("dragover", (e) => {
         e.preventDefault();
         dropZone.classList.add("border-[#1b439c]", "bg-blue-50/50");
       });
+
       dropZone.addEventListener("dragleave", () => {
         dropZone.classList.remove("border-[#1b439c]", "bg-blue-50/50");
       });
+
       dropZone.addEventListener("drop", (e) => {
         e.preventDefault();
         dropZone.classList.remove("border-[#1b439c]", "bg-blue-50/50");
@@ -584,12 +1117,12 @@
 
         const name = document.getElementById("inputName").value.trim();
         const age = parseInt(document.getElementById("inputAge").value, 10);
-        const state = document.getElementById("inputState").value.trim();
+        const hometown = (document.getElementById("inputHometown") || document.getElementById("inputState"))?.value.trim() || "";
         const seeking = document.getElementById("inputSeeking").value.trim();
         const bio = document.getElementById("inputBio").value.trim();
         const birthdayAlert = document.getElementById("inputBirthday").value.trim();
 
-        if (!name || isNaN(age) || !state || !bio) {
+        if (!name || isNaN(age) || !hometown || !bio) {
           formError.textContent = "Please fill in all required fields.";
           formError.classList.remove("hidden");
           return;
@@ -597,30 +1130,38 @@
 
         // Disable submit button
         submitBtn.disabled = true;
-        submitBtnText.textContent = "Posting...";
+        submitBtnText.textContent = "Submitting...";
         submitSpinner.classList.remove("hidden");
 
         try {
           const inmatesRef = collection(db, "inmates");
+          // When submitted, defaults to "pending" moderation status unless user is logged-in admin
+          const initialStatus = isAdminLoggedIn ? "approved" : "pending";
+
           await addDoc(inmatesRef, {
             name,
             age,
-            state,
+            hometown,
+            state: hometown,
             seeking,
             bio,
             imageUrl: selectedImageBase64,
             birthdayAlert: birthdayAlert || "",
+            status: initialStatus,
             createdAt: new Date().toISOString()
           });
 
           closeModal();
+          if (!isAdminLoggedIn) {
+            alert("Thank you! Your inmate profile has been submitted and is pending administrator review.");
+          }
         } catch (err) {
           console.error("Error adding inmate:", err);
           formError.textContent = "Failed to post inmate profile. Please try again.";
           formError.classList.remove("hidden");
         } finally {
           submitBtn.disabled = false;
-          submitBtnText.textContent = "Post Profile";
+          submitBtnText.textContent = "Submit Profile";
           submitSpinner.classList.add("hidden");
         }
       });

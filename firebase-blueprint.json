@@ -7,14 +7,37 @@
       "properties": {
         "name": { "type": "string", "description": "Inmate's full name" },
         "age": { "type": "number", "description": "Age of the inmate" },
-        "state": { "type": "string", "description": "State where inmate is incarcerated" },
+        "hometown": { "type": "string", "description": "Inmate's hometown" },
+        "state": { "type": "string", "description": "State where inmate is incarcerated (legacy/optional)" },
         "seeking": { "type": "string", "description": "Who they are seeking, e.g. U.S. pen-pals" },
         "bio": { "type": "string", "description": "Personal biography or letter" },
         "imageUrl": { "type": "string", "description": "Profile picture data URL or link" },
         "birthdayAlert": { "type": "string", "description": "Optional birthday or note" },
+        "status": { "type": "string", "description": "Approval status: pending, approved, or denied", "enum": ["pending", "approved", "denied"] },
         "createdAt": { "type": "string", "description": "ISO timestamp" }
       },
-      "required": ["name", "age", "state", "bio", "createdAt"]
+      "required": ["name", "age", "bio", "status", "createdAt"]
+    },
+    "admins": {
+      "title": "Admin Record",
+      "description": "Authorized administrator profiles",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "description": "Admin email address" },
+        "role": { "type": "string", "description": "Role identifier, e.g. admin" },
+        "addedAt": { "type": "string", "description": "ISO timestamp" }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/inmates/{inmateId}": {
+      "schema": "inmates",
+      "description": "All inmate profile submissions"
+    },
+    "/admins/{adminId}": {
+      "schema": "admins",
+      "description": "Admin user whitelist"
     }
   }
 }
